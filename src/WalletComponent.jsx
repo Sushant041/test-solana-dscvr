@@ -1,9 +1,9 @@
 import { FC } from "react";
 import useCanvasWallet from "./CanvasWalletProvider";
 import UserProfile from "./UserProfile"; // Ensure the correct path to UserProfile
-import Main1 from "./Main1"; // Import Main1 component
+import { Main1 } from "./Main1"; // Import Main1 component
 
-const WalletComponent: FC = () => {
+const WalletComponent = () => {
   const { connectWallet, walletAddress, walletIcon, userInfo, content, signTransaction } =
     useCanvasWallet();
 

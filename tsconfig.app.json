@@ -20,5 +20,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/Main1.tsx"]
+  "include": ["src", "src/Main1.jsx"]
 }

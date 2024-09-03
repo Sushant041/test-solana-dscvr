@@ -6,7 +6,7 @@ import { CanvasWalletProvider } from './CanvasWalletProvider';
 import WalletComponent from './WalletComponent';
 import Main1 from './Main1';
 
-export const App: FC = () => {
+export const App = () => {
   const [count, setCount] = useState(0);
 
   return (

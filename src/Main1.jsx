@@ -5,25 +5,19 @@ import {
   clusterApiUrl,
   Connection,
   SystemProgram,
+  Transaction,
 } from "@solana/web3.js";
-
 import {
   AnchorProvider,
   BN,
-  setProvider,
   Program,
 } from "@coral-xyz/anchor";
 import { Buffer } from "buffer";
 
 window.Buffer = Buffer;
 
-interface Main1Props {
-  walletAddress: string;
-  signTransaction: (transaction: Transaction) => Promise<Transaction>;
-}
-
-const Main1: React.FC<Main1Props> = ({ walletAddress, signTransaction }) => {
-  const [campaigns, setCampaigns] = useState<any[]>([]);
+export const Main1 = ({ walletAddress, signTransaction }) => {
+  const [campaigns, setCampaigns] = useState([]);
   const programId = new PublicKey(idl.address);
 
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
@@ -40,20 +34,23 @@ const Main1: React.FC<Main1Props> = ({ walletAddress, signTransaction }) => {
         console.error("Wallet not connected.");
         return;
       }
-      
-      const provider = new AnchorProvider(connection, { publicKey: new PublicKey(walletAddress), signTransaction }, {
+
+      const provider = new AnchorProvider(connection, {
+        publicKey: new PublicKey(walletAddress),
+        signTransaction,
+      }, {
         commitment: "confirmed",
       });
+
       setProvider(provider);
-      
+
       const program = new Program(idl, provider);
-      
+
       const [campaign] = PublicKey.findProgramAddressSync(
         [Buffer.from("CAMPAIGN_DEMO"), new PublicKey(walletAddress).toBuffer()],
         program.programId
       );
-      
-      // console.log("SystemProgram", SystemProgram.programId.toString());
+
       await program.methods
         .create("campaign name", "campaign description")
         .accounts({
@@ -74,7 +71,10 @@ const Main1: React.FC<Main1Props> = ({ walletAddress, signTransaction }) => {
   };
 
   const getCampaigns = async () => {
-    const provider = new AnchorProvider(connection, { publicKey: new PublicKey(walletAddress), signTransaction }, {
+    const provider = new AnchorProvider(connection, {
+      publicKey: new PublicKey(walletAddress),
+      signTransaction,
+    }, {
       commitment: "confirmed",
     });
     const program = new Program(idl, provider);
@@ -89,9 +89,12 @@ const Main1: React.FC<Main1Props> = ({ walletAddress, signTransaction }) => {
     setCampaigns(campaigns);
   };
 
-  const donate = async (publicKey: PublicKey) => {
+  const donate = async (publicKey) => {
     try {
-      const provider = new AnchorProvider(connection, { publicKey: new PublicKey(walletAddress), signTransaction }, {
+      const provider = new AnchorProvider(connection, {
+        publicKey: new PublicKey(walletAddress),
+        signTransaction,
+      }, {
         commitment: "confirmed",
       });
       const program = new Program(idl, provider);
@@ -114,9 +117,12 @@ const Main1: React.FC<Main1Props> = ({ walletAddress, signTransaction }) => {
     }
   };
 
-  const withdraw = async (publicKey: PublicKey) => {
+  const withdraw = async (publicKey) => {
     try {
-      const provider = new AnchorProvider(connection, { publicKey: new PublicKey(walletAddress), signTransaction }, {
+      const provider = new AnchorProvider(connection, {
+        publicKey: new PublicKey(walletAddress),
+        signTransaction,
+      }, {
         commitment: "confirmed",
       });
       const program = new Program(idl, provider);
@@ -153,7 +159,7 @@ const Main1: React.FC<Main1Props> = ({ walletAddress, signTransaction }) => {
                 Balance:{" "}
                 {(campaign.amountDonated / 1e9).toFixed(2)} SOL
               </p>
-              <p>admin: {campaign.admin.toString()}</p>
+              <p>Admin: {campaign.admin.toString()}</p>
               <button onClick={() => donate(campaign.pubkey)}>Donate</button>
               {campaign.admin.toString() === walletAddress && (
                 <button onClick={() => withdraw(campaign.pubkey)}>
@@ -174,4 +180,3 @@ const Main1: React.FC<Main1Props> = ({ walletAddress, signTransaction }) => {
   );
 };
 
-export default Main1;
