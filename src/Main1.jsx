@@ -43,7 +43,7 @@ const Main1 = ({ walletAddress, signTransaction }) => {
         commitment: "confirmed",
       });
 
-      setProvider(provider);
+      // setProvider(provider);
 
       const program = new Program(idl, provider);
 
