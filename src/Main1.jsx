@@ -11,6 +11,7 @@ import {
   AnchorProvider,
   BN,
   Program,
+  setProvider,
 } from "@coral-xyz/anchor";
 import { Buffer } from "buffer";
 
