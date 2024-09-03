@@ -16,36 +16,15 @@ const GET_USER_DATA = gql`
   }
 `;
 
-// Define the TypeScript interfaces for the user data
-interface UserProfileProps {
-  username: string; // This could be the ID of the logged-in user who is viewing the profile
-}
+const UserProfile = ({ username }) => {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-interface UserProfileData {
-  id: string;
-  followingCount: number;
-  followerCount: number;
-  dscvrPoints: string;
-}
-
-interface UserByNameResponse {
-    userByName: {
-      id: string;
-      followingCount: number;
-      followerCount: number;
-      dscvrPoints: string;
-    };
-  }
-
-const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
-  const [userData, setUserData] = useState<UserProfileData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchUserData = async (username: string) => {
+  const fetchUserData = async (username) => {
     try {
       setLoading(true);
-      const data : UserByNameResponse = await client.request(GET_USER_DATA, { username});
+      const data = await client.request(GET_USER_DATA, { username });
       setUserData(data.userByName);
       setLoading(false);
     } catch (err) {
@@ -56,7 +35,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
 
   useEffect(() => {
     fetchUserData(username);
-  }, []);
+  }, [username]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;

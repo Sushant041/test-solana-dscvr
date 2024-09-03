@@ -16,7 +16,7 @@ import { Buffer } from "buffer";
 
 window.Buffer = Buffer;
 
-export const Main1 = ({ walletAddress, signTransaction }) => {
+export default Main1 = ({ walletAddress, signTransaction }) => {
   const [campaigns, setCampaigns] = useState([]);
   const programId = new PublicKey(idl.address);
 
@@ -179,4 +179,3 @@ export const Main1 = ({ walletAddress, signTransaction }) => {
     </div>
   );
 };
-

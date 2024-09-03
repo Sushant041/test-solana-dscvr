@@ -1,35 +1,20 @@
-import { useState, useContext, createContext, useEffect, ReactNode } from 'react';
+import { useState, useContext, createContext, useEffect } from 'react';
 import { CanvasClient } from '@dscvr-one/canvas-client-sdk';
 import { registerCanvasWallet } from '@dscvr-one/canvas-wallet-adapter';
 import { Connection, PublicKey, Transaction } from '@solana/web3.js';
 import { encode } from 'bs58';
 
-interface WalletContextType {
-    connectWallet: () => Promise<void>;
-    walletAddress: string | null;
-    walletIcon: string | null;
-    signTransaction: (transaction: Transaction) => Promise<string | null>;
-    iframe: boolean;
-    userInfo: { id: string; username: string; avatar?: string | undefined; } | undefined;
-    content: { id: string; portalId: string; portalName: string; } | undefined
-}
-
-const WalletContext = createContext<WalletContextType | null>(null);
+const WalletContext = createContext(null);
 
 const SOLANA_MAINNET_CHAIN_ID = "solana:101"; // Solana mainnet chain ID
 
-
-export const CanvasWalletProvider = ({ children }: { children: ReactNode }) => {
-    const [canvasClient, setCanvasClient] = useState<CanvasClient | null>(null);
-    const [walletAddress, setWalletAddress] = useState<string | null>(null);
-    const [walletIcon, setWalletIcon] = useState<string | null>(null);
-    const [iframe, setIframe] = useState<boolean>(false);
-    const [userInfo, setUserInfo] = useState<{ id: string; username: string; avatar?: string | undefined; }>();
-    const [content, setContent] = useState<{
-        id: string;
-        portalId: string;
-        portalName: string;
-    }>();
+export const CanvasWalletProvider = ({ children }) => {
+    const [canvasClient, setCanvasClient] = useState(null);
+    const [walletAddress, setWalletAddress] = useState(null);
+    const [walletIcon, setWalletIcon] = useState(null);
+    const [iframe, setIframe] = useState(false);
+    const [userInfo, setUserInfo] = useState(undefined);
+    const [content, setContent] = useState(undefined);
 
     useEffect(() => {
         const isIframe = () => {
@@ -70,12 +55,9 @@ export const CanvasWalletProvider = ({ children }: { children: ReactNode }) => {
                     setWalletAddress(response.untrusted.address);
                     setWalletIcon(response.untrusted.walletIcon);
                     console.log('Wallet connected:', response.untrusted.address);
-
-
                 } else {
                     console.error('Failed to connect wallet');
                 }
-
             } catch (error) {
                 console.error('Error connecting wallet:', error);
             }
@@ -84,7 +66,7 @@ export const CanvasWalletProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const signTransaction = async (transaction: Transaction) => {
+    const signTransaction = async (transaction) => {
         if (!canvasClient || !walletAddress) {
             console.error('CanvasClient or walletAddress is not available');
             return null;
@@ -105,7 +87,7 @@ export const CanvasWalletProvider = ({ children }: { children: ReactNode }) => {
                 verifySignatures: false,
             });
 
-            const base58Tx = encode(serializedTx)
+            const base58Tx = encode(serializedTx);
 
             // Sign and send the transaction via canvasClient
             const results = await canvasClient.signAndSendTransaction({
@@ -127,8 +109,7 @@ export const CanvasWalletProvider = ({ children }: { children: ReactNode }) => {
         return null;
     };
 
-
-    const value: WalletContextType = {
+    const value = {
         connectWallet,
         walletAddress,
         walletIcon,
@@ -143,9 +124,8 @@ export const CanvasWalletProvider = ({ children }: { children: ReactNode }) => {
             {children}
         </WalletContext.Provider>
     );
-
-
 };
+
 const useCanvasWallet = () => {
     const context = useContext(WalletContext);
     if (!context) {
@@ -155,7 +135,3 @@ const useCanvasWallet = () => {
 };
 
 export default useCanvasWallet;
-
-//const {userInfo, content} = useCanvasWallet()
-//userInfo is an array of id, username and avatar, so you can access it like userInfo?.username from any page
-//content is an array of id , portalId and portalName, so you can access it like content?.portalId from any page
