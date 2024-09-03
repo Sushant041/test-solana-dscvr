@@ -1,7 +1,7 @@
 import { useState, useContext, createContext, useEffect, ReactNode } from 'react';
 import { CanvasClient } from '@dscvr-one/canvas-client-sdk';
 import { registerCanvasWallet } from '@dscvr-one/canvas-wallet-adapter';
-import { clusterApiUrl, Connection, PublicKey, Transaction } from '@solana/web3.js';
+import { Connection, PublicKey, Transaction } from '@solana/web3.js';
 import { encode } from 'bs58';
 
 interface WalletContextType {
