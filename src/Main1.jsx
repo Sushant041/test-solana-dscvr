@@ -11,7 +11,6 @@ import {
   AnchorProvider,
   BN,
   Program,
-  setProvider,
 } from "@coral-xyz/anchor";
 import { Buffer } from "buffer";
 
@@ -43,8 +42,6 @@ const Main1 = ({ walletAddress, signTransaction }) => {
         commitment: "confirmed",
       });
 
-      // setProvider(provider);
-
       const program = new Program(idl, provider);
 
       const [campaign] = PublicKey.findProgramAddressSync(
@@ -59,6 +56,7 @@ const Main1 = ({ walletAddress, signTransaction }) => {
           user: new PublicKey(walletAddress),
           systemProgram: SystemProgram.programId,
         })
+        .signers([asset])
         .rpc();
 
       console.log("Created a new campaign w/ address:", campaign.toString());
@@ -123,6 +121,7 @@ const Main1 = ({ walletAddress, signTransaction }) => {
       const provider = new AnchorProvider(connection, {
         publicKey: new PublicKey(walletAddress),
         signTransaction,
+        signAllTransactions
       }, {
         commitment: "confirmed",
       });
