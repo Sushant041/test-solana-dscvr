@@ -56,7 +56,7 @@ const Main1 = ({ walletAddress, signTransaction }) => {
           user: new PublicKey(walletAddress),
           systemProgram: SystemProgram.programId,
         })
-        .signers([asset])
+        // .signers([asset])
         .rpc();
 
       console.log("Created a new campaign w/ address:", campaign.toString());
