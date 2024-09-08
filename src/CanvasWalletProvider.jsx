@@ -72,6 +72,8 @@ export const CanvasWalletProvider = ({ children }) => {
             return null;
         }
 
+        console.log(transaction);
+
         try {
             const network = process.env.NEXT_PUBLIC_SOLANA_RPC || "https://api.devnet.solana.com/";
             const connection = new Connection(network, 'confirmed');
